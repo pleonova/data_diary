@@ -17,14 +17,17 @@ try:
     flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
 except ImportError:
     flags = None
+    
+# Set up key and access file/folder
+credentials_path = 'C:/Users/Leonova/Dropbox/Time Keeping - Mason Jar/'
+credential_file_name = 'credentials_client_secret_google_calendar.json'
 
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/calendar-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
 #CLIENT_SECRET_FILE = 'client_secret.json'
 #APPLICATION_NAME = 'Google Calendar API Python Quickstart'
-
-CLIENT_SECRET_FILE = 'credentials_client_secret_google_calendar.json'
+CLIENT_SECRET_FILE = credentials_path + credential_file_name
 APPLICATION_NAME = 'Mason Jar Calendar'
 
 
