@@ -19,7 +19,7 @@ except ImportError:
     flags = None
     
 # Set up key and access file/folder
-credentials_path = 'C:/Users/Leonova/Dropbox/Time Keeping - Mason Jar/'
+mason_jar_path = 'C:/Users/Leonova/Dropbox/Time Keeping - Mason Jar/'
 credential_file_name = 'credentials_client_secret_google_calendar.json'
 
 # If modifying these scopes, delete your previously saved credentials
@@ -27,7 +27,7 @@ credential_file_name = 'credentials_client_secret_google_calendar.json'
 SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
 #CLIENT_SECRET_FILE = 'client_secret.json'
 #APPLICATION_NAME = 'Google Calendar API Python Quickstart'
-CLIENT_SECRET_FILE = credentials_path + credential_file_name
+CLIENT_SECRET_FILE = mason_jar_path + credential_file_name
 APPLICATION_NAME = 'Mason Jar Calendar'
 
 
@@ -152,8 +152,10 @@ def getEvents(exportFile='BICTeamCalendarExport', numEvents=1000, emailId='prima
         except:
             exportFile.write(emailId + ',' + start + ',' + end + ',' + created + ',' + '' + ',' + numberRecipients + ',' + email0 + ',' + email1 + ',' + email2 + ',' + email3 + ',' + email4 + ',' + email5)
             exportFile.write('\n')
-        
+
+# Change the path of the directory so as to save the exported csv into another folder
 if __name__ == '__main__':
+    os.chdir(mason_jar_path)
     #an array of google calendars to export
     ids = ['p.leonova@gmail.com',
             ]
