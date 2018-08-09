@@ -98,6 +98,11 @@ def getEvents(exportFile='BICTeamCalendarExport', numEvents=1000, emailId='prima
         except:
             created = 'error'
             
+        try: 
+            description = '' #event['description'].replace(',', '')
+        except:
+            description = ''
+            
         try:
             summary = event['summary'].replace(',', '')
         except:
@@ -147,10 +152,10 @@ def getEvents(exportFile='BICTeamCalendarExport', numEvents=1000, emailId='prima
             
         #print(emailId, start, summary, email0, email1, email2, email3, email4, email5)
         try:
-            exportFile.write(emailId + ',' + start + ',' + end + ',' + created + ',' + summary + ',' + numberRecipients + ',' + email0 + ',' + email1 + ',' + email2 + ',' + email3 + ',' + email4 + ',' + email5)
+            exportFile.write(emailId + ',' + start + ',' + end + ',' + created + ',' + description + ',' + summary + ',' + numberRecipients + ',' + email0 + ',' + email1 + ',' + email2 + ',' + email3 + ',' + email4 + ',' + email5)
             exportFile.write('\n')
         except:
-            exportFile.write(emailId + ',' + start + ',' + end + ',' + created + ',' + '' + ',' + numberRecipients + ',' + email0 + ',' + email1 + ',' + email2 + ',' + email3 + ',' + email4 + ',' + email5)
+            exportFile.write(emailId + ',' + start + ',' + end + ',' + created + ',' + '' + ',' + '' + ',' + numberRecipients + ',' + email0 + ',' + email1 + ',' + email2 + ',' + email3 + ',' + email4 + ',' + email5)
             exportFile.write('\n')
 
 # Change the path of the directory so as to save the exported csv into another folder
@@ -161,9 +166,9 @@ if __name__ == '__main__':
             ]
     
     #create/overwrite the export csv file
-    exportFile = open('GoogleCalendarExport.csv','w')
+    exportFile = open('GoogleCalendarExport_description3.csv','w')
     #header for the csv file
-    exportFile.write('emailId,start,end,created,summary,numberRecipients,email0,email1,email2,email3,email4,email5\n')
+    exportFile.write('emailId,start,end,created, description, summary,numberRecipients,email0,email1,email2,email3,email4,email5\n')
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
