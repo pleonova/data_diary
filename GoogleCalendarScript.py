@@ -60,6 +60,16 @@ def get_credentials():
     return credentials
 
 
+## Test input parameters
+exportFile='BICTeamCalendarExport'
+numEvents=1000
+emailId='primary'
+credentials='' 
+http=''
+service=''
+startDate=''
+
+
 def getEvents(exportFile='BICTeamCalendarExport', numEvents=1000, emailId='primary', credentials='', http='', service='', startDate=''):
     '''
     This function grabs 2500 event from a calendar and dumps the results to csv.
@@ -98,10 +108,18 @@ def getEvents(exportFile='BICTeamCalendarExport', numEvents=1000, emailId='prima
         except:
             created = 'error'
             
-        try: 
-            description = '' #event['description'].replace(',', '')
+#        try: 
+#            description = '' #event['description'].replace(',', '')
+#        except:
+#            description = ''
+            
+        try:
+            if 'description' in event:
+                desc = event['description']
+            else:
+                desc = 'no description exists'
         except:
-            description = ''
+            desc = ''
             
         try:
             summary = event['summary'].replace(',', '')
@@ -152,21 +170,21 @@ def getEvents(exportFile='BICTeamCalendarExport', numEvents=1000, emailId='prima
             
         #print(emailId, start, summary, email0, email1, email2, email3, email4, email5)
         try:
-            exportFile.write(emailId + ',' + start + ',' + end + ',' + created + ',' + description + ',' + summary + ',' + numberRecipients + ',' + email0 + ',' + email1 + ',' + email2 + ',' + email3 + ',' + email4 + ',' + email5)
+            exportFile.write(emailId + ',' + start + ',' + end + ',' + created + ',' + desc + ',' + summary + ',' + numberRecipients + ',' + email0 + ',' + email1 + ',' + email2 + ',' + email3 + ',' + email4 + ',' + email5)
             exportFile.write('\n')
         except:
             exportFile.write(emailId + ',' + start + ',' + end + ',' + created + ',' + '' + ',' + '' + ',' + numberRecipients + ',' + email0 + ',' + email1 + ',' + email2 + ',' + email3 + ',' + email4 + ',' + email5)
             exportFile.write('\n')
 
-# Change the path of the directory so as to save the exported csv into another folder
 if __name__ == '__main__':
+    # Change the path of the directory so as to save the exported csv into another folder
     os.chdir(mason_jar_path)
     #an array of google calendars to export
     ids = ['p.leonova@gmail.com',
             ]
     
     #create/overwrite the export csv file
-    exportFile = open('GoogleCalendarExport_description3.csv','w')
+    exportFile = open('GoogleCalendarExport_description 2018-08-13.csv','w')
     #header for the csv file
     exportFile.write('emailId,start,end,created, description, summary,numberRecipients,email0,email1,email2,email3,email4,email5\n')
     credentials = get_credentials()
@@ -181,3 +199,7 @@ if __name__ == '__main__':
     for emailId in ids:
         getEvents(exportFile=exportFile, emailId=emailId, numEvents=2500, credentials=credentials, http=http, service=service, startDate=startDate)
     exportFile.close()
+    
+    
+    
+    
