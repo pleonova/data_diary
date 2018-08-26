@@ -14,7 +14,6 @@ Goals: Extract data from Fitbit, Google Now, RescueTime to have a comprehensive
 overview of where my time goes. 
 
 """
-
 from __future__ import print_function
 from datetime import datetime, timedelta, date
 
@@ -22,6 +21,7 @@ from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
 
+import os
 import pandas as pd
 import numpy as np
 
@@ -30,10 +30,10 @@ import numpy as np
 mason_jar_path = 'C:/Users/Leonova/Dropbox/Time Keeping - Mason Jar/'
 credential_file_name = 'credentials_client_secret_google_calendar.json'
 
-
-CLIENT_SECRET_FILE = mason_jar_path + credential_file_name
+# Set up tokens and secrets
+CLIENT_SECRET_FILE = os.path.join(mason_jar_path, credential_file_name)
 APPLICATION_NAME = 'Mason Jar Calendar'
-TOKEN = mason_jar_path + 'token.json'
+TOKEN = os.path.join(mason_jar_path, 'token.json')
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
 
