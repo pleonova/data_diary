@@ -6,6 +6,13 @@ Modification of the Python Google Calendar API
 https://developers.google.com/calendar/quickstart/python
 
 @author: Leonova
+
+Objective: Extract past google calander events into a pandas dataframe in order 
+to detect behavioral patterns. 
+
+Goals: Extract data from Fitbit, Google Now, RescueTime to have a comprehensive
+overview of where my time goes. 
+
 """
 
 from __future__ import print_function
@@ -25,10 +32,7 @@ SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
 mason_jar_path = 'C:/Users/Leonova/Dropbox/Time Keeping - Mason Jar/'
 credential_file_name = 'credentials_client_secret_google_calendar.json'
 
-# If modifying these scopes, delete your previously saved credentials
-# at ~/.credentials/calendar-python-quickstart.json
-#CLIENT_SECRET_FILE = 'client_secret.json'
-#APPLICATION_NAME = 'Google Calendar API Python Quickstart'
+
 CLIENT_SECRET_FILE = mason_jar_path + credential_file_name
 APPLICATION_NAME = 'Mason Jar Calendar'
 
@@ -38,7 +42,7 @@ def main():
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
-    store = file.Storage('token.json')
+    store = file.Storage(mason_jar_path + 'token.json')
     creds = store.get()
     if not creds or creds.invalid:
         flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
