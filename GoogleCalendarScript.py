@@ -176,7 +176,7 @@ def getEvents(exportFile='BICTeamCalendarExport', numEvents=1000, emailId='prima
             exportFile.write(emailId + ',' + start + ',' + end + ',' + created + ',' + '' + ',' + '' + ',' + numberRecipients + ',' + email0 + ',' + email1 + ',' + email2 + ',' + email3 + ',' + email4 + ',' + email5)
             exportFile.write('\n')
 
-if __name__ == '__main__':
+if __name__ == '__main__':  
     # Change the path of the directory so as to save the exported csv into another folder
     os.chdir(mason_jar_path)
     #an array of google calendars to export

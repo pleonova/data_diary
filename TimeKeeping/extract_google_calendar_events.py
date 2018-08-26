@@ -73,17 +73,30 @@ def main(start_date):
     if not events:
         print('No upcoming events found.')
     for event in events:
+        # Get the start time of the event
         start = event['start'].get('dateTime', event['start'].get('date'))
-
-    # Sometimes description is omitted entirely
+        # Sometimes description is omitted entirely
         if 'description' in event:
             desc = event['description']
         else:
             desc = 'no description exists'
       
-    # We want our final out put to have the start, name of event and description              
+        # We want our final out put to have the start, name of event and description              
         print(start, event['summary'], desc)
+        
+        # Add contents to a file
+        exportFile.write(start + ',' + event['summary'] + ',' + desc)
+        exportFile.write('\n')
 
 
 if __name__ == '__main__':
-    main()
+
+    exportFile = open('GoogleCalendarExport ' + start_date + ' - ' + str(date.today()) + '.csv','w')
+    #header for the csv file
+    #exportFile.write('start,title') #,description')
+    
+    main(start_date)
+    
+    exportFile.close()
+    
+    
