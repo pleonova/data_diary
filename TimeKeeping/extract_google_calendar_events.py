@@ -77,7 +77,7 @@ def main(start_date):
         start = event['start'].get('dateTime', event['start'].get('date'))
         # Sometimes description is omitted entirely
         if 'description' in event:
-            desc = event['description']
+            desc = event['description'].replace('\n', ' ').replace('\r', '')
         else:
             desc = 'no description exists'
       
