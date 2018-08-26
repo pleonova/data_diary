@@ -86,7 +86,7 @@ def main(start_date):
         print(start, event_title, desc)
         
         # Add contents to a file
-        exportFile.write(start + ',' + event_title + ',' + desc)
+        exportFile.write(start + '\t' + event_title + '\t' + desc)
         exportFile.write('\n')
 
 
