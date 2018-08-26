@@ -184,7 +184,7 @@ if __name__ == '__main__':
             ]
     
     #create/overwrite the export csv file
-    exportFile = open('GoogleCalendarExport_description 2018-08-13.csv','w')
+    exportFile = open('GoogleCalendarExport_description 2018-08-25.csv','w')
     #header for the csv file
     exportFile.write('emailId,start,end,created, description, summary,numberRecipients,email0,email1,email2,email3,email4,email5\n')
     credentials = get_credentials()
