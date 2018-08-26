@@ -16,7 +16,8 @@ overview of where my time goes.
 """
 
 from __future__ import print_function
-import datetime
+from datetime import datetime, timedelta
+
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
@@ -36,9 +37,10 @@ TOKEN = mason_jar_path + 'token.json'
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
 
+# How far back do you want to retrieve events
+num_days_prior = 2
 
-
-def main():
+def main(num_days_prior):
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
@@ -49,15 +51,17 @@ def main():
         creds = tools.run_flow(flow, store)
     service = build('calendar', 'v3', http=creds.authorize(Http()))
 
+
     # Call the Calendar API
     now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    x_days_before = (datetime.today() - timedelta(days=num_days_prior)).isoformat() + 'Z'
     print('Getting the upcoming 10 events')
     
     # Details about the events().list() class: 
     # https://developers.google.com/calendar/v3/reference/events/list
     events_result = service.events().list(
             calendarId='primary', 
-            timeMin=now,
+            timeMin=x_days_before,
             maxResults=10, 
             singleEvents=True,
             orderBy='startTime').execute()
