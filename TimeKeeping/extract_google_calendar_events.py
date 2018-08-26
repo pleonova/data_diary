@@ -63,7 +63,7 @@ def main(start_date):
             calendarId='primary', 
             timeMin=past_date,
             timeMax=current_date,
-            #maxResults=10, 
+            maxResults=1000, 
             singleEvents=True,
             orderBy='startTime').execute()
     
