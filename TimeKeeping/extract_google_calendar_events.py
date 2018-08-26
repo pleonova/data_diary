@@ -16,7 +16,7 @@ overview of where my time goes.
 """
 
 from __future__ import print_function
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 from googleapiclient.discovery import build
 from httplib2 import Http
@@ -37,10 +37,10 @@ TOKEN = mason_jar_path + 'token.json'
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
 
-# How far back do you want to retrieve events
-num_days_prior = 2
+# Date from which you want to start retrieving events from 
+start_date = '2018-08-01'
 
-def main(num_days_prior):
+def main(start_date):
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
@@ -53,16 +53,17 @@ def main(num_days_prior):
 
 
     # Call the Calendar API
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    x_days_before = (datetime.today() - timedelta(days=num_days_prior)).isoformat() + 'Z'
+    past_date = pd.to_datetime(start_date).isoformat()+'Z'
+    current_date = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
     print('Getting the upcoming 10 events')
     
     # Details about the events().list() class: 
     # https://developers.google.com/calendar/v3/reference/events/list
     events_result = service.events().list(
             calendarId='primary', 
-            timeMin=x_days_before,
-            maxResults=10, 
+            timeMin=past_date,
+            timeMax=current_date,
+            #maxResults=10, 
             singleEvents=True,
             orderBy='startTime').execute()
     
