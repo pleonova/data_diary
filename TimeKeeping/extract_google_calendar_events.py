@@ -55,7 +55,7 @@ def main(start_date):
     # Call the Calendar API
     past_date = pd.to_datetime(start_date).isoformat()+'Z'
     current_date = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
+    print('Getting the events between ' + past_date + ' and ' + current_date )
     
     # Details about the events().list() class: 
     # https://developers.google.com/calendar/v3/reference/events/list
