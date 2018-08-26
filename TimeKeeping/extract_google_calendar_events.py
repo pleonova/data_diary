@@ -80,12 +80,13 @@ def main(start_date):
             desc = event['description'].replace('\n', ' ').replace('\r', '')
         else:
             desc = 'no description exists'
-      
+            
+        event_title = event['summary'].replace(',', ' ')
         # We want our final out put to have the start, name of event and description              
-        print(start, event['summary'], desc)
+        print(start, event_title, desc)
         
         # Add contents to a file
-        exportFile.write(start + ',' + event['summary'] + ',' + desc)
+        exportFile.write(start + ',' + event_title + ',' + desc)
         exportFile.write('\n')
 
 
