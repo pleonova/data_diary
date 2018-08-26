@@ -81,7 +81,7 @@ def main(start_date):
         else:
             desc = 'no description exists'
             
-        event_title = event['summary'].replace(',', ' ')
+        event_title = event['summary']#.replace(',', ' ')
         # We want our final out put to have the start, name of event and description              
         print(start, event_title, desc)
         
@@ -93,8 +93,8 @@ def main(start_date):
 if __name__ == '__main__':
 
     exportFile = open('GoogleCalendarExport ' + start_date + ' - ' + str(date.today()) + '.csv','w')
-    #header for the csv file
-    #exportFile.write('start,title') #,description')
+    # Add headers for the csv file
+    exportFile.write('start\ttitle\tdescription\n')
     
     main(start_date)
     
