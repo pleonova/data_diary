@@ -15,7 +15,9 @@
     var rowConverter = function(d) {  // Create a converter for each column
         return {
             date: d.date, //No conversion
-            weather: parseFloat(d.weather)
+            weather: parseFloat(d.weather),
+            location: parseFloat(d.location)
+
         };
     }
     
@@ -29,7 +31,7 @@
 
         var barPadding = 1;
         var maxData = d3.max(dataset, function(d) { return d.weather; } );
-        var heightRelative_MaxData =  h/maxData;
+        var heightRelative_MaxData =  10 //h/maxData;
         var widthRelative_LengthData = w / dataset.length;
         var medianData = d3.median(dataset, function(d) { return d.weather; } );
 
@@ -61,6 +63,29 @@
                 if (d.weather <= medianData) {return "teal"} else { return "orange" }
             });
 
+        var canvas2 = d3.select("body")
+                    .append("svg")
+                    .attr("width", w+400)
+                    .attr("height", h+300);
+        
+        canvas2
+            .selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")
+            .attr("x", function(d, i) {
+                return i * widthRelative_LengthData;  // Make sure that there is space for ALL data
+            })
+            .attr("y", function(d) {
+                return h - (d.location * heightRelative_MaxData) ; // <-- Create a dynamic height adjustment, 
+            })
+            .attr("width", widthRelative_LengthData - barPadding) // Extend the width of the chart to fit space
+            .attr("height", function(d) {
+                return d.location * heightRelative_MaxData; 
+            })
+            .attr("fill", function(d) { 
+                return "rgb(0, 0, " + Math.round(d.location*.001) + ")"  // Gradient
+            });
 
     });
 
