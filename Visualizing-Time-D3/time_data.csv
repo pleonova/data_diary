@@ -1,6 +1,6 @@
-date,weather
-Day1,80
-Day2,70
-Day3,65
-Day4,99
-Day5,94
+date,weather,location
+Day1,80,1
+Day2,70,1
+Day3,65,2
+Day4,99,3
+Day5,94,3
