@@ -1,0 +1,70 @@
+<!doctype HTML>
+
+<html>
+<head>
+  <title>Data Patterns</title>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+
+</head>
+<body>
+
+  <script>
+      
+    var dataset;
+      
+    var rowConverter = function(d) {  // Create a converter for each column
+        return {
+            date: d.date, //No conversion
+            weather: parseFloat(d.weather)
+        };
+    }
+    
+    
+    d3.csv("time_data.csv", rowConverter, function (data) {
+        dataset = data
+
+        //***** VARIABLES *****//
+        var w = 700;
+        var h = 300;
+
+        var barPadding = 1;
+        var maxData = d3.max(dataset, function(d) { return d.weather; } );
+        var heightRelative_MaxData =  h/maxData;
+        var widthRelative_LengthData = w / dataset.length;
+        var medianData = d3.median(dataset, function(d) { return d.weather; } );
+
+        
+        //Create SVG element
+        var canvas = d3.select("body")
+                    .append("svg")
+                    .attr("width", w)
+                    .attr("height", h);
+
+        canvas
+            .selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")
+            .attr("x", function(d, i) {
+                return i * widthRelative_LengthData;  // Make sure that there is space for ALL data
+            })
+            .attr("y", function(d) {
+                return h - (d.weather * heightRelative_MaxData) ; // <-- Create a dynamic height adjustment, 
+            })
+            .attr("width", widthRelative_LengthData - barPadding) // Extend the width of the chart to fit space
+            .attr("height", function(d) {
+                return d.weather * heightRelative_MaxData; 
+            })
+            .attr("fill", function(d) { // COLOR - Modify the color according to the median
+
+//            return "rgb(0, 0, " + Math.round(d.weather*2) + ")"  // Gradient
+                if (d.weather <= medianData) {return "teal"} else { return "orange" }
+            });
+
+
+    });
+
+  </script>
+
+</body>
+</html>
