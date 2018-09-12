@@ -27,14 +27,16 @@
 
         //***** VARIABLES *****//
         var w = 700;
-        var h = 100;
+
 
         var barPadding = 1;
         var maxData = d3.max(dataset, function(d) { return d.weather; } );
         var heightRelative_MaxData =  10 //h/maxData;
-        var heightRelative_columnsData = h / 2 ; //dataset.fnGetData(0).length;
         var widthRelative_LengthData = w / dataset.length;
         var medianData = d3.median(dataset, function(d) { return d.weather; } );
+
+        // heightRelative_columnsData
+        var h = widthRelative_LengthData //* Object.keys(dataset[0]).length;  // allows us to get the number of columns
 
         
         //Create SVG element
