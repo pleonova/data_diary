@@ -37,6 +37,7 @@
         //***** VARIABLES *****//
         var w = 800;
         var h = 100;
+        var area = "#area1"
         
         var barPadding = 10;
         var borderPadding = 5;
@@ -61,7 +62,7 @@
         
         // Layer each svg element on top of each other
         var canvas = 
-            d3.select("#area1")
+            d3.select(area)
             .append("svg")
             .attr("width", w)
             .attr("height", h)
