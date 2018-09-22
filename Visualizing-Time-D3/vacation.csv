@@ -1,0 +1,14 @@
+Date,City - night spent in,city_code,Country,country_code,weather_far,Weather (C),Humidity,walking_tour
+"Sun, July 8 ",Nice,1,France,1,77,28,55,0
+"Mon, July 9 ",Nice,1,France,1,78,27,65,1
+"Tue, July 10 ",Nice,1,France,1,81,26,70,0
+"Wed, July 11 ",Nice,1,France,1,83,25,73,0
+"Thu, July 12 ",Nice,1,France,1,83,26,50,0
+"Fri, July 13 ",Bordeaux,2,France,1,87,,,1
+"Sat, July 14 ",Bordeaux,2,France,1,87,,,0
+"Sun, July 15 ",Bordeaux,2,France,1,92,,,0
+"Mon, July 16 ",San Sebastian,3,Spain,2,73,,,1
+"Tue, July 17 ",San Sebastian,3,Spain,2,73,,,0
+"Wed, July 18 ",San Sebastian,3,Spain,2,67,,,0
+"Thu, July 19 ",Bilbao,4,Spain,2,73,,,1
+"Fri, July 20 ",Bilbao,4,Spain,2,67,,,0

@@ -20,14 +20,15 @@
     var rowConverter = function(d) {  // Create a converter for each column
         return {
             date: d.date, //No conversion
-            weather: parseFloat(d.weather),
-            location: parseFloat(d.location)
+            weather: parseFloat(d.weather_far),
+            city_code: parseFloat(d.city_code),
+            country_code: parseFloat(d.country_code)
 
         };
     }
     
     // Load in data
-    d3.csv("time_data.csv", rowConverter, function (data) {
+    d3.csv("vacation.csv", rowConverter, function (data) {
         dataset = data
 
         //***** VARIABLES *****//
@@ -89,7 +90,7 @@
             .attr("height", h)
             .attr("width", recWidth) 
             .attr("fill", function(d) {
-                return "rgb(0,0, " + Math.round(d.location*100) + ")" })
+                return "rgb(0,0, " + Math.round(d.city_code*100) + ")" })
         ;
 
     });
