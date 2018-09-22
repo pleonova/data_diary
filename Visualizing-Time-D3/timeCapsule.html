@@ -47,6 +47,11 @@
         
         //Color Variables
         var medianData = d3.median(dataset, function(d) { return d.weather; } );
+        //Easy colors accessible via a 10-step ordinal scale
+        var colors = d3.scaleOrdinal(d3.schemeCategory10);   
+        var countryScale = d3.scaleOrdinal()
+            .domain(['France', 'Spain'])
+            .range(['blue', 'yellow']);
         
         
         //***** Create SVG elements *****//
@@ -113,8 +118,12 @@
             .attr("y", barPadding)
             .attr("height", h)
             .attr("width", recWidth) 
-            .attr("fill", function(d) {
-                return "rgb(0," + Math.round(d.walking_tour*100) + ",0 )" })
+            .attr("fill", function(d, i) {
+             //   return "rgb(0," + Math.round(d.walking_tour*100) + ",0 )" 
+//                return colors(i)
+                return countryScale(d.country_code);
+
+        })
         ;
 
     });
