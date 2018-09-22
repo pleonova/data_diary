@@ -7,11 +7,12 @@
 
 </head>
 <body>
+	<!-- Page elements and content go here. -->
 
   <script>
       
     var dataset;
-      
+    
     var rowConverter = function(d) {  // Create a converter for each column
         return {
             date: d.date, //No conversion
@@ -21,65 +22,72 @@
         };
     }
     
-    
+    // Load in data
     d3.csv("time_data.csv", rowConverter, function (data) {
         dataset = data
 
         //***** VARIABLES *****//
-        var w = 700;
-
-
+        var w = 200;
+        var h = 100;
+        
         var barPadding = 10;
-        var maxData = d3.max(dataset, function(d) { return d.weather; } );
-        var heightRelative_MaxData =  10 //h/maxData;
+        var borderPadding = 5;
+        var num_features = 2;
         var widthRelative_LengthData = w / dataset.length;
+        var recWidth =  (w-2 * borderPadding - dataset.length * barPadding) / dataset.length;
+        var recHeight = (h-2 * borderPadding - num_features   * barPadding) / num_features;
+        
+        //Color Variables
         var medianData = d3.median(dataset, function(d) { return d.weather; } );
 
-        // heightRelative_columnsData
-        var h = widthRelative_LengthData //* Object.keys(dataset[0]).length;  // allows us to get the number of columns
-
         
-        //Create SVG element
-        var canvas = d3.select("body")
-                    .append("svg")
-                    .attr("width", w)
-                    .attr("height", h);
-
-        canvas
+        
+        //***** Create SVG elements *****//
+        
+        // Layer each svg element on top of each other
+        var canvas = 
+            d3.select("body")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h)
+        
+//        var canvas2 = 
+//            d3.select("body")
+//            .append("svg")
+//            .attr("width", w)
+//            .attr("height", h);
+        
+        // Update elements
+        canvas 
             .selectAll("rect")
             .data(dataset)
             .enter()
-            .append("rect")
+            .append("rect")  
             .attr("x", function(d, i) {
-                return i * widthRelative_LengthData;  // Make sure that there is space for ALL data
-            })
-            //.attr("y", 20) 
-            .attr("width", widthRelative_LengthData - barPadding) // Extend the width of the chart to fit space
-            .attr("height", h)
-            .attr("fill", function(d) { // COLOR - Modify the color according to the median
-
-//            return "rgb(0, 0, " + Math.round(d.weather*2) + ")"  // Gradient
-                if (d.weather <= medianData) {return "teal"} else { return "orange" }
-            });
-
-        var canvas2 = d3.select("body")
-                    .append("svg")
-                    .attr("width", w)
-                    .attr("height", h);
-        
-        canvas2
-            .selectAll("rect")
-            .data(dataset)
-            .enter()
-            .append("rect")
-            .attr("width", widthRelative_LengthData - barPadding) // Extend the width of the chart to fit space
-            .attr("x", function(d, i) {
-                return i * widthRelative_LengthData;  // Make sure that there is space for ALL data
-            })
-            .attr("height", h)
+                return (i*recWidth) + (i*barPadding); 
+            })        
+            .attr("y", borderPadding + (0*h/num_features) + (0*barPadding) )
+            .attr("height", recHeight)
+            .attr("width", recWidth) 
             .attr("fill", function(d) { 
-                return "rgb(0, 0, " + Math.round(d.location*.001) + ")"  // Gradient
-            });
+                if (d.weather <= medianData) {return "teal"} else { return "orange" } })
+            ;
+
+//        canvas2 
+//            .selectAll("rect")
+//            .data(dataset)
+//            .enter()
+//            .append("rect")  
+//            .attr("x", function(d, i) {
+//                return borderPadding + (i*h/dataset.length) + (i*barPadding); 
+//            })                
+//            .attr("y", borderPadding + (1*h/num_features) + (1*barPadding) )
+//            .attr("height", recHeight)
+//            .attr("width", recWidth) 
+//            .attr("fill", function(d) { 
+//                 return "rgb(" + d.location + "," + d.location + "," + d.location + ")"
+//            })
+//        ;
 
     });
 
