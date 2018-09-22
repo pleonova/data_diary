@@ -6,6 +6,10 @@
   <script src="https://d3js.org/d3.v4.min.js"></script>
 
 </head>
+    
+<div id="area1"></div>
+<div id="area2"></div> 
+    
 <body>
 	<!-- Page elements and content go here. -->
 
@@ -27,7 +31,7 @@
         dataset = data
 
         //***** VARIABLES *****//
-        var w = 200;
+        var w = 400;
         var h = 100;
         
         var barPadding = 10;
@@ -46,16 +50,17 @@
         
         // Layer each svg element on top of each other
         var canvas = 
-            d3.select("body")
+            d3.select("#area1")
             .append("svg")
             .attr("width", w)
             .attr("height", h)
         
-//        var canvas2 = 
-//            d3.select("body")
-//            .append("svg")
-//            .attr("width", w)
-//            .attr("height", h);
+        var canvas2 = 
+            d3.select("#area2")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+        
         
         // Update elements
         canvas 
@@ -66,28 +71,26 @@
             .attr("x", function(d, i) {
                 return (i*recWidth) + (i*barPadding); 
             })        
-            .attr("y", borderPadding + (0*h/num_features) + (0*barPadding) )
-            .attr("height", recHeight)
+            .attr("y", barPadding)
+            .attr("height", h)
             .attr("width", recWidth) 
             .attr("fill", function(d) { 
                 if (d.weather <= medianData) {return "teal"} else { return "orange" } })
             ;
 
-//        canvas2 
-//            .selectAll("rect")
-//            .data(dataset)
-//            .enter()
-//            .append("rect")  
-//            .attr("x", function(d, i) {
-//                return borderPadding + (i*h/dataset.length) + (i*barPadding); 
-//            })                
-//            .attr("y", borderPadding + (1*h/num_features) + (1*barPadding) )
-//            .attr("height", recHeight)
-//            .attr("width", recWidth) 
-//            .attr("fill", function(d) { 
-//                 return "rgb(" + d.location + "," + d.location + "," + d.location + ")"
-//            })
-//        ;
+        canvas2 
+            .selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")  
+            .attr("x", function(d, i) {
+                return (i*recWidth) + (i*barPadding); 
+            })              
+            .attr("y", barPadding)
+            .attr("height", h)
+            .attr("width", recWidth) 
+            .attr("fill", "red")
+        ;
 
     });
 
