@@ -52,6 +52,9 @@
         var countryScale = d3.scaleOrdinal()
             .domain(['France', 'Spain'])
             .range(['blue', 'yellow']);
+        var countryScale2 = d3.scaleOrdinal()
+            .domain(['France', 'Spain'])
+            .range(["#b95faf","#6588ce"]);
         
         
         //***** Create SVG elements *****//
@@ -121,7 +124,7 @@
             .attr("fill", function(d, i) {
              //   return "rgb(0," + Math.round(d.walking_tour*100) + ",0 )" 
 //                return colors(i)
-                return countryScale(d.country_code);
+                return countryScale2(d.country_code);
 
         })
         ;
