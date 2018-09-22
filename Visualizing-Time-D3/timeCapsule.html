@@ -43,7 +43,6 @@
         
         //Color Variables
         var medianData = d3.median(dataset, function(d) { return d.weather; } );
-
         
         
         //***** Create SVG elements *****//
@@ -89,7 +88,8 @@
             .attr("y", barPadding)
             .attr("height", h)
             .attr("width", recWidth) 
-            .attr("fill", "red")
+            .attr("fill", function(d) {
+                return "rgb(0,0, " + Math.round(d.location*100) + ")" })
         ;
 
     });
