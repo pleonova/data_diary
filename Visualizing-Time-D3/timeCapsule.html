@@ -9,6 +9,8 @@
     
 <div id="area1"></div>
 <div id="area2"></div> 
+<div id="area3"></div> 
+
     
 <body>
 	<!-- Page elements and content go here. -->
@@ -22,7 +24,8 @@
             date: d.date, //No conversion
             weather: parseFloat(d.weather_far),
             city_code: parseFloat(d.city_code),
-            country_code: parseFloat(d.country_code)
+            country_code: parseFloat(d.country_code),
+            walking_tour: parseFloat(d.walking_tour)
 
         };
     }
@@ -61,6 +64,12 @@
             .attr("width", w)
             .attr("height", h);
         
+        var canvas3 = 
+            d3.select("#area3")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+        
         
         // Update elements
         canvas 
@@ -91,6 +100,21 @@
             .attr("width", recWidth) 
             .attr("fill", function(d) {
                 return "rgb(0,0, " + Math.round(d.city_code*100) + ")" })
+        ;
+        
+        canvas3
+            .selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")  
+            .attr("x", function(d, i) {
+                return (i*recWidth) + (i*barPadding); 
+            })              
+            .attr("y", barPadding)
+            .attr("height", h)
+            .attr("width", recWidth) 
+            .attr("fill", function(d) {
+                return "rgb(0," + Math.round(d.walking_tour*100) + ",0 )" })
         ;
 
     });
