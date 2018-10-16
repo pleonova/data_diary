@@ -36,12 +36,14 @@ data.reindex(data.index.drop(0))
 #data.to_csv('sheet_tasks.csv')
 
 #####################################
-
+# Load data entries from calendar
 cal = pd.read_csv("GoogleCalendarExport 2017-10-30 to 2017-11-05.csv", delimiter='\t')
 
 ####################################
 
 cal['title_part1'], cal['title_part2'] = cal.title.str.split('(').str
 cal['key'], cal['title_part2'] = cal.title_part2.str.split(')').str
+
+cal['is_meeting'] = cal['title'].str.contains("\*")
 
 
