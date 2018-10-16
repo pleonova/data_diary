@@ -79,8 +79,9 @@ def main(start_date, end_date):
     if not events:
         print('No upcoming events found.')
     for event in events:
-        # Get the start time of the event
+        # Get the start and end date/time of the event
         start = event['start'].get('dateTime', event['start'].get('date'))
+        end = event['end'].get('dateTime', event['end'].get('date'))
         # Sometimes description is omitted entirely
         if 'description' in event:
             desc = event['description'].replace('\n', ' ').replace('\r', '')
@@ -89,10 +90,10 @@ def main(start_date, end_date):
             
         event_title = event['summary']#.replace(',', ' ')
         # We want our final out put to have the start, name of event and description              
-        print(start, event_title, desc)
+        print(start, end, event_title, desc)
         
-        # Add contents to a file
-        exportFile.write(start + '\t' + event_title + '\t' + desc)
+        # Add contents to a file (tab separted)
+        exportFile.write(start + '\t' + end + '\t' + event_title + '\t' + desc)
         exportFile.write('\n')
 
 # Change the path where to store the export file
@@ -101,8 +102,8 @@ os.chdir(mason_jar_path)
 if __name__ == '__main__':
 
     exportFile = open('GoogleCalendarExport ' + start_date + ' to ' + end_date + '.csv','w')
-    # Add headers for the csv file
-    exportFile.write('start\ttitle\tdescription\n')
+    # Add headers for the csv file (tab separted)
+    exportFile.write('start\tend\ttitle\tdescription\n')
     
     main(start_date, end_date)
     
