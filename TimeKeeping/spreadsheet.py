@@ -41,9 +41,11 @@ cal = pd.read_csv("GoogleCalendarExport 2017-10-30 to 2017-11-05.csv", delimiter
 
 ####################################
 
+# Separate the event title and extract the key from the name
 cal['title_part1'], cal['title_part2'] = cal.title.str.split('(').str
 cal['key'], cal['title_part2'] = cal.title_part2.str.split(')').str
 
+# Create a new column to signify if the event was a meeting
 cal['is_meeting'] = cal['title'].str.contains("\*")
 
 
