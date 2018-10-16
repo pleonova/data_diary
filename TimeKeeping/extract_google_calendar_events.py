@@ -35,18 +35,26 @@ TOKEN = os.path.join(mason_jar_path, 'token.json')
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
 
+
+# Change the path where additional files are stores
+os.chdir(mason_jar_path)
+
+# Get the unique id for the calendar
+from calendar_id_list import *
+calendar_id = tasks_calendar_id
+
 # Date Range: Start
-start_date = '2018-08-01'
+start_date = '2017-10-30'
 # Date Range: End
 #now = datetime.now()      #str(date.today())
 #now.strftime("%Y-%m-%d %H:%M")
 
-end_date = '2018-08-25'
+end_date = '2017-11-05'
 
 
 
 
-def main(start_date, end_date):
+def main(start_date, end_date, calendar_id):
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
@@ -66,7 +74,7 @@ def main(start_date, end_date):
     # Details about the events().list() class: 
     # https://developers.google.com/calendar/v3/reference/events/list
     events_result = service.events().list(
-            calendarId = 'primary', 
+            calendarId = calendar_id, #'primary', 
             timeMin = start_date_z,
             timeMax = end_date_z,
             maxResults = 1000, 
@@ -105,7 +113,7 @@ if __name__ == '__main__':
     # Add headers for the csv file (tab separted)
     exportFile.write('start\tend\ttitle\tdescription\n')
     
-    main(start_date, end_date)
+    main(start_date, end_date, calendar_id)
     
     exportFile.close()
     
