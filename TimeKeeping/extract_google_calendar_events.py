@@ -41,9 +41,12 @@ start_date = '2018-08-01'
 #now = datetime.now()      #str(date.today())
 #now.strftime("%Y-%m-%d %H:%M")
 
-end_date = '2018-08-10'
+end_date = '2018-08-25'
 
-def main(start_date):
+
+
+
+def main(start_date, end_date):
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
@@ -92,14 +95,16 @@ def main(start_date):
         exportFile.write(start + '\t' + event_title + '\t' + desc)
         exportFile.write('\n')
 
+# Change the path where to store the export file
+os.chdir(mason_jar_path)
 
 if __name__ == '__main__':
 
-    exportFile = open('GoogleCalendarExport ' + start_date + '  to' + end_date + '.csv','w')
+    exportFile = open('GoogleCalendarExport ' + start_date + ' to ' + end_date + '.csv','w')
     # Add headers for the csv file
     exportFile.write('start\ttitle\tdescription\n')
     
-    main(start_date)
+    main(start_date, end_date)
     
     exportFile.close()
     
