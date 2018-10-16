@@ -14,7 +14,6 @@ Goals: Extract data from Fitbit, Google Now, RescueTime to have a comprehensive
 overview of where my time goes. 
 
 """
-from __future__ import print_function
 from datetime import datetime, timedelta, date
 
 from googleapiclient.discovery import build
@@ -29,7 +28,6 @@ import numpy as np
 # Set up key and access file/folder
 mason_jar_path = 'C:/Users/Leonova/Dropbox/Time Keeping - Mason Jar/'
 credential_file_name = 'credentials_client_secret_google_calendar.json'
-
 # Set up tokens and secrets
 CLIENT_SECRET_FILE = os.path.join(mason_jar_path, credential_file_name)
 APPLICATION_NAME = 'Mason Jar Calendar'
@@ -37,8 +35,13 @@ TOKEN = os.path.join(mason_jar_path, 'token.json')
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
 
-# Date from which you want to start retrieving events from 
+# Date Range: Start
 start_date = '2018-08-01'
+# Date Range: End
+#now = datetime.now()      #str(date.today())
+#now.strftime("%Y-%m-%d %H:%M")
+
+end_date = '2018-08-10'
 
 def main(start_date):
     """Shows basic usage of the Google Calendar API.
@@ -52,20 +55,20 @@ def main(start_date):
     service = build('calendar', 'v3', http=creds.authorize(Http()))
 
 
-    # Call the Calendar API
-    past_date = pd.to_datetime(start_date).isoformat()+'Z'
-    current_date = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    print('Getting the events between ' + past_date + ' and ' + current_date )
+    # Call the Calendar API ('Z' indicates UTC time)
+    start_date_z = pd.to_datetime(start_date).isoformat()+'Z'
+    end_date_z = pd.to_datetime(end_date).isoformat() + 'Z' 
+    print('Getting the events between ' + start_date_z + ' and ' + end_date_z)
     
     # Details about the events().list() class: 
     # https://developers.google.com/calendar/v3/reference/events/list
     events_result = service.events().list(
-            calendarId='primary', 
-            timeMin=past_date,
-            timeMax=current_date,
-            maxResults=1000, 
-            singleEvents=True,
-            orderBy='startTime').execute()
+            calendarId = 'primary', 
+            timeMin = start_date_z,
+            timeMax = end_date_z,
+            maxResults = 1000, 
+            singleEvents = True,
+            orderBy ='startTime').execute()
     
     # We want to extract the things that are stored in items
     events = events_result.get('items', [])
@@ -92,7 +95,7 @@ def main(start_date):
 
 if __name__ == '__main__':
 
-    exportFile = open('GoogleCalendarExport ' + start_date + ' - ' + str(date.today()) + '.csv','w')
+    exportFile = open('GoogleCalendarExport ' + start_date + '  to' + end_date + '.csv','w')
     # Add headers for the csv file
     exportFile.write('start\ttitle\tdescription\n')
     
