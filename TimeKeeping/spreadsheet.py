@@ -30,7 +30,8 @@ sheet = gc.open("Mason Jar Tasks").worksheet('List of Tasks (2017)')
 data = sheet.get_all_values()
 data = pd.DataFrame(data)
 data.columns = data.iloc[0]
-data.reindex(data.index.drop(0))
+data.drop(data.index[0], inplace=True)
+
 
 
 #data.to_csv('sheet_tasks.csv')
@@ -39,7 +40,6 @@ data.reindex(data.index.drop(0))
 # Load data entries from calendar
 cal = pd.read_csv("GoogleCalendarExport 2017-10-30 to 2017-11-05.csv", delimiter='\t')
 
-####################################
 
 # Separate the event title and extract the key from the name
 cal['title_part1'], cal['title_part2'] = cal.title.str.split('(').str
@@ -48,4 +48,7 @@ cal['key'], cal['title_part2'] = cal.title_part2.str.split(')').str
 # Create a new column to signify if the event was a meeting
 cal['is_meeting'] = cal['title'].str.contains("\*")
 
+
+
+df = pd.merge(data, cal, how = 'inner', left_on = ')
 
