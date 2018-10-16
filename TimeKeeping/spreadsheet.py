@@ -5,11 +5,17 @@ Created on Tue Oct 16 13:53:44 2018
 @author: Leonova
 """
 
+import os
 import pandas as pd
+import numpy as np
 
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+
+# Change the path where additional files are stores
+mason_jar_path = 'C:/Users/Leonova/Dropbox/Time Keeping - Mason Jar/'
+os.chdir(mason_jar_path)
 
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
@@ -21,9 +27,6 @@ gc = gspread.authorize(credentials)
 #sheet = gc.open("Mason Jar Tasks").sheet1
 sheet = gc.open("Mason Jar Tasks").worksheet('List of Tasks (2017)')
 
-
-
-
 data = sheet.get_all_values()
 data = pd.DataFrame(data)
 data.columns = data.iloc[0]
@@ -34,6 +37,11 @@ data.reindex(data.index.drop(0))
 
 #####################################
 
+cal = pd.read_csv("GoogleCalendarExport 2017-10-30 to 2017-11-05.csv", delimiter='\t')
 
+####################################
+
+cal['title_part1'], cal['title_part2'] = cal.title.str.split('(').str
+cal['key'], cal['title_part2'] = cal.title_part2.str.split(')').str
 
 
