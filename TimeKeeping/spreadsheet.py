@@ -49,6 +49,6 @@ cal['key'], cal['title_part2'] = cal.title_part2.str.split(')').str
 cal['is_meeting'] = cal['title'].str.contains("\*")
 
 
-
-df = pd.merge(data, cal, how = 'inner', left_on = ')
+# Combine the time durations/frequency (cal) with the details of each task (data)
+df = pd.merge(cal, data, how = 'inner',  left_on = 'key', right_on = 'Task Reference #',)
 
