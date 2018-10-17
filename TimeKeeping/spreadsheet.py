@@ -74,9 +74,36 @@ df = pd.merge(cal_abr, data, how = 'inner',  left_on = 'key', right_on = 'Task R
 # Day of Week
 df['day_of_week'] = df.start_date_pt.dt.dayofweek
 # Year and Week Number
-df['week_num'] = df.start_date_pt.dt.strftime('%Y-%U')
+df['year_week'] = df.start_date_pt.dt.strftime('%Y-%U')
          
+
+
 ################ Data Calculations ####################
 
-df.             
-              
+# Total hours worked
+df[df['Area'] != 'Break'].groupby('year_week')['task_time_minutes'].sum()/60
+
+# Total time spent per Area
+df.groupby('Area')['task_time_minutes'].sum()/60  
+
+# Total time spent per Skill
+df.groupby('Skill')['task_time_minutes'].sum()/60 
+
+# Total time spent per Tool
+(df.groupby(['year_week','Tool/Format'])['task_time_minutes'].sum()/60).reset_index()
+
+# Split out by project
+df.groupby(['Tool/Format', 'Task'])['task_time_minutes'].sum()/60 
+
+
+
+# Create dataframe of hours working per week (excluding breaks)
+df_year_week = df[df['Area'] != 'Break'].groupby('year_week').agg(
+                {'task_time_minutes' : [np.sum],
+                 'start_date_pt': [np.min]
+                }).reset_index()
+df_year_week.columns = [''.join(col).strip() for col in df_year_week.columns.values]
+df_year_week['week_start'] = df_year_week['start_date_ptamin'].dt.date
+df_year_week['task_hours'] = df_year_week['task_time_minutessum']/60
+
+
