@@ -12,6 +12,9 @@ import numpy as np
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+from datetime import datetime
+from pytz import all_timezones
+
 
 # Change the path where additional files are stores
 mason_jar_path = 'C:/Users/Leonova/Dropbox/Time Keeping - Mason Jar/'
@@ -47,6 +50,16 @@ cal['key'], cal['title_part2'] = cal.title_part2.str.split(')').str
 
 # Create a new column to signify if the event was a meeting
 cal['is_meeting'] = cal['title'].str.contains("\*")
+
+# Rename date columns
+cal.rename(columns = {'start': 'start_date', 'end': 'end_date'}, inplace = True)
+
+# Convert date columns
+cal['start_date_utc'] = pd.to_datetime(cal['start_date'])
+cal['start_date_pt'].dt.tz_localize('US/Pacific')
+
+cal['end_date_utc'] = pd.to_datetime(cal['end_date'])
+cal['end_date_pt'].dt.tz_localize('US/Pacific')
 
 
 # Combine the time durations/frequency (cal) with the details of each task (data)
