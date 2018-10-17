@@ -35,8 +35,7 @@ data = pd.DataFrame(data)
 data.columns = data.iloc[0]
 data.drop(data.index[0], inplace=True)
 
-
-
+ 
 #data.to_csv('sheet_tasks.csv')
 
 #####################################
@@ -64,7 +63,20 @@ cal['end_date_pt'] = cal['end_date_utc'].dt.tz_localize('US/Pacific')
 # Task time column 
 cal['task_time_minutes'] = (cal['end_date_utc'] - cal['start_date_utc']).dt.total_seconds()/60.0
 
+# Select a subset of relevant columns
+cal_abr = cal[['key', 'start_date_pt', 'end_date_pt', 'task_time_minutes', 'description', 'is_meeting']]
 
+
+############### Combine Data ###################
 # Combine the time durations/frequency (cal) with the details of each task (data)
-df = pd.merge(cal, data, how = 'inner',  left_on = 'key', right_on = 'Task Reference #',)
+df = pd.merge(cal_abr, data, how = 'inner',  left_on = 'key', right_on = 'Task Reference #',)
 
+# Day of Week
+df['day_of_week'] = df.start_date_pt.dt.dayofweek
+# Year and Week Number
+df['week_num'] = df.start_date_pt.dt.strftime('%Y-%U')
+         
+################ Data Calculations ####################
+
+df.             
+              
