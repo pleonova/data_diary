@@ -40,7 +40,12 @@ data.drop(data.index[0], inplace=True)
 
 #####################################
 # Load data entries from calendar
-cal = pd.read_csv("GoogleCalendarExport 2017-10-30 to 2017-11-05.csv", delimiter='\t')
+#cal = pd.read_csv("GoogleCalendarExport 2017-10-30 to 2017-11-05.csv", delimiter='\t')
+cal = pd.read_csv("GoogleCalendarExport 2017-09-07 to 2018-01-13.csv", delimiter='\t')
+
+# Remove any columns that don't have a key between ()
+cal['categorized'] = cal['title'].str.contains("\(")
+cal = cal[cal['categorized'] == True]
 
 
 # Separate the event title and extract the key from the name
