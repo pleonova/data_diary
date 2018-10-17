@@ -44,12 +44,12 @@ from calendar_id_list import *
 calendar_id = tasks_calendar_id
 
 # Date Range: Start
-start_date = '2017-10-30'
+start_date = '2017-09-07'
 # Date Range: End
 #now = datetime.now()      #str(date.today())
 #now.strftime("%Y-%m-%d %H:%M")
 
-end_date = '2017-11-05'
+end_date = '2018-01-13'
 
 
 
