@@ -56,10 +56,13 @@ cal.rename(columns = {'start': 'start_date', 'end': 'end_date'}, inplace = True)
 
 # Convert date columns
 cal['start_date_utc'] = pd.to_datetime(cal['start_date'])
-cal['start_date_pt'].dt.tz_localize('US/Pacific')
+cal['start_date_pt'] = cal['start_date_utc'].dt.tz_localize('US/Pacific')
 
 cal['end_date_utc'] = pd.to_datetime(cal['end_date'])
-cal['end_date_pt'].dt.tz_localize('US/Pacific')
+cal['end_date_pt'] = cal['end_date_utc'].dt.tz_localize('US/Pacific')
+
+# Task time column 
+cal['task_time_minutes'] = (cal['end_date_utc'] - cal['start_date_utc']).dt.total_seconds()/60.0
 
 
 # Combine the time durations/frequency (cal) with the details of each task (data)
