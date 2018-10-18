@@ -96,7 +96,7 @@ df['year_week'] = df.start_date_pt.dt.strftime('%Y-%U')
 # Generalize Column Names
 date_agg_column = 'year_week'
 time_column = 'task_time_minutes'  # Needs to be in minutes
-category_column = 'Tool/Format'
+category_column = 'Area'
 
 
 # Total hours worked
@@ -163,12 +163,21 @@ for i in range(len(category_list)):
 
 plt.xticks(pos, objects)
 plt.xticks(rotation=45)
-plt.legend(category_list)
+plt.legend(category_list, bbox_to_anchor=(1.2,0.5), loc="center")
 
 plt.ylabel('Hours')
 plt.xlabel('Year-Week#')
-plt.title('Total Time Spent Per Category')
+plt.title('Total Time Spent Per ' + category_column)
 plt.show()
+
+
+
+
+
+
+
+
+
 
 
 
