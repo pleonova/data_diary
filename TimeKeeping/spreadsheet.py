@@ -15,6 +15,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 from pytz import all_timezones
 
+import re
+
 
 # Change the path where additional files are stores
 mason_jar_path = 'C:/Users/Leonova/Dropbox/Time Keeping - Mason Jar/'
@@ -46,11 +48,13 @@ cal = pd.read_csv("GoogleCalendarExport 2017-09-07 to 2018-01-13.csv", delimiter
 # Remove any columns that don't have a key between ()
 cal['categorized'] = cal['title'].str.contains("\(")
 cal = cal[cal['categorized'] == True]
+cal = cal.reset_index()
 
 
 # Separate the event title and extract the key from the name
-cal['title_part1'], cal['title_part2'] = cal.title.str.split('(').str
-cal['key'], cal['title_part2'] = cal.title_part2.str.split(')').str
+key = []
+for k in range(len(cal)):
+    key.append(re.search('(\()(.\d*)(\))', cal.title[k]).group(2))
 
 # Create a new column to signify if the event was a meeting
 cal['is_meeting'] = cal['title'].str.contains("\*")
