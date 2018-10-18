@@ -132,9 +132,7 @@ d2['cumsum'] = d2.groupby(['tool'])['tool_hours'].apply(lambda x: x.cumsum())
 
 
 # Visually display the data
-tool_list = ['Python', 'Redshift']
-
-
+#tool_list = ['Python', 'Redshift']
 plt.figure(figsize=(8,6))
 column_name = 'tool_hours'
 plt.plot(d2[d2['tool']==tool_list[0]]['year_week'], d2[d2['tool']==tool_list[0]][column_name])
@@ -151,11 +149,13 @@ pos = np.arange(len(year_week_list))
 column_name = 'cumsum'
 
 plt.figure(figsize=(8,6))
-plt.plot(pos, d2[d2['tool']==tool_list[0]][column_name])
-plt.plot(pos, d2[d2['tool']==tool_list[1]][column_name])
+
+for i in range(len(tool_list)):
+    plt.plot(pos, d2[d2['tool']==tool_list[i]][column_name])
 
 plt.xticks(pos, objects)
 plt.xticks(rotation=45)
+plt.legend(tool_list)
 
 plt.ylabel('Hours')
 plt.xlabel('Year-Week#')
