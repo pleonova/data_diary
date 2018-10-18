@@ -100,10 +100,10 @@ hrs_df.rename(columns = {'task_time_minutes': 'total_hours'}, inplace = True)
 
 
 # Total time spent per Tool
-tool_name = 'Python'
-tool = (df[df['Tool/Format'] == tool_name].groupby(['year_week','Tool/Format'])['task_time_minutes'].sum()/60).reset_index()
+tool = (df.groupby(['year_week','Tool/Format'])['task_time_minutes'].sum()/60).reset_index()
 tool_df = pd.DataFrame(tool)
-tool_df.rename(columns = {'task_time_minutes': 'tool_hours'}, inplace = True)
+tool_df.rename(columns = {'task_time_minutes': 'tool_hours',
+                          'Tool/Format': 'tool'}, inplace = True)
 
 # Combine the two dataframes
 d2 = pd.merge(hrs_df,tool_df, how = 'left', left_on = 'year_week', right_on = 'year_week')
@@ -114,12 +114,20 @@ d2['tool_hours'] = d2['tool_hours'].fillna(0)
 # Percentage of time spent using the tool
 d2['percentage'] = d2['tool_hours']/d2['total_hours']
 
+# Order values by date (for chart below)
+d2.sort_values('year_week')
+
 # Visually display the data
+tool_list = ['Python', 'Redshift']
+
+
 plt.figure(figsize=(8,6))
-plt.plot(d2['year_week'], d2['percentage'])
+
+plt.plot(d2[d2['tool']==tool_list[0]]['year_week'], d2[d2['tool']==tool_list[0]]['percentage'])
+plt.plot(d2[d2['tool']==tool_list[1]]['year_week'], d2[d2['tool']==tool_list[1]]['percentage'])
 plt.ylim(0,1)
 plt.xticks(rotation=45)
-plt.savefig('tool_usage.png',  bbox_inches="tight")
+#plt.savefig('tool_usage.png',  bbox_inches="tight")
 plt.show()
 
 
@@ -131,8 +139,7 @@ plt.show()
 df[df['Area'] != 'Break'].groupby('year_week')['task_time_minutes'].sum()/60
 
 
-# Total time spent per Area
-df.groupby('Area')['task_time_minutes'].sum()/60  
+df.groupby('Tool/Format')['task_time_minutes'].sum()/60  
 
 # Total time spent per Skill
 df.groupby('Skill')['task_time_minutes'].sum()/60 
