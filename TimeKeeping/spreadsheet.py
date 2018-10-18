@@ -55,6 +55,8 @@ cal = cal.reset_index()
 key = []
 for k in range(len(cal)):
     key.append(re.search('(\()(.\d*)(\))', cal.title[k]).group(2))
+    
+cal['key'] = key
 
 # Create a new column to signify if the event was a meeting
 cal['is_meeting'] = cal['title'].str.contains("\*")
