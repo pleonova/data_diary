@@ -16,6 +16,8 @@ from datetime import datetime
 from pytz import all_timezones
 
 import re
+import matplotlib.pyplot as plt
+
 
 
 # Change the path where additional files are stores
@@ -92,7 +94,42 @@ df['year_week'] = df.start_date_pt.dt.strftime('%Y-%U')
 ################ Data Calculations ####################
 
 # Total hours worked
+hrs = df.groupby('year_week')['task_time_minutes'].sum()/60
+hrs_df = pd.DataFrame(hrs).reset_index()
+hrs_df.rename(columns = {'task_time_minutes': 'total_hours'}, inplace = True)
+
+
+# Total time spent per Tool
+tool_name = 'Python'
+tool = (df[df['Tool/Format'] == tool_name].groupby(['year_week','Tool/Format'])['task_time_minutes'].sum()/60).reset_index()
+tool_df = pd.DataFrame(tool)
+tool_df.rename(columns = {'task_time_minutes': 'tool_hours'}, inplace = True)
+
+# Combine the two dataframes
+d2 = pd.merge(hrs_df,tool_df, how = 'left', left_on = 'year_week', right_on = 'year_week')
+
+# Replace all nan values with 0
+d2['tool_hours'] = d2['tool_hours'].fillna(0)
+
+# Percentage of time spent using the tool
+d2['percentage'] = d2['tool_hours']/d2['total_hours']
+
+# Visually display the data
+plt.figure(figsize=(8,6))
+plt.plot(d2['year_week'], d2['percentage'])
+plt.ylim(0,1)
+plt.xticks(rotation=45)
+plt.savefig('tool_usage.png',  bbox_inches="tight")
+plt.show()
+
+
+
+
+
+
+# Total hours worked, excluding breaks
 df[df['Area'] != 'Break'].groupby('year_week')['task_time_minutes'].sum()/60
+
 
 # Total time spent per Area
 df.groupby('Area')['task_time_minutes'].sum()/60  
@@ -100,8 +137,9 @@ df.groupby('Area')['task_time_minutes'].sum()/60
 # Total time spent per Skill
 df.groupby('Skill')['task_time_minutes'].sum()/60 
 
-# Total time spent per Tool
-(df.groupby(['year_week','Tool/Format'])['task_time_minutes'].sum()/60).reset_index()
+
+
+# How much time did I spend before 9am or after 5pm
 
 # Split out by project
 df.groupby(['Tool/Format', 'Task'])['task_time_minutes'].sum()/60 
