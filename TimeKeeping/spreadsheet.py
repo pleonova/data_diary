@@ -108,8 +108,8 @@ tool_df.rename(columns = {'task_time_minutes': 'tool_hours',
 
 # Make sure every date appears for every tool (cross join) - for plotting
 tool_list = list(df['Tool/Format'].unique())
-week_year_list = list(df['year_week'].unique())
-d_cross = pd.DataFrame(list(itertools.product(tool_list, week_year_list))) 
+year_week_list = list(df['year_week'].unique())
+d_cross = pd.DataFrame(list(itertools.product(tool_list, year_week_list))) 
 d_cross.columns = ['tool', 'year_week']   
     
     
@@ -123,9 +123,12 @@ d2['tool_hours'] = d2['tool_hours'].fillna(0)
 # Percentage of time spent using the tool
 d2['percentage'] = d2['tool_hours']/d2['total_hours']
 
+
 # Order values by date (for chart below)
 d2.sort_values('year_week')
 
+# Create a cumlative sum column for each tool
+d2['cumsum'] = d2.groupby(['tool'])['tool_hours'].apply(lambda x: x.cumsum())
 
 
 # Visually display the data
@@ -133,12 +136,30 @@ tool_list = ['Python', 'Redshift']
 
 
 plt.figure(figsize=(8,6))
-
-plt.plot(d2[d2['tool']==tool_list[0]]['year_week'], d2[d2['tool']==tool_list[0]]['percentage'])
-plt.plot(d2[d2['tool']==tool_list[1]]['year_week'], d2[d2['tool']==tool_list[1]]['percentage'])
-plt.ylim(0,1)
+column_name = 'tool_hours'
+plt.plot(d2[d2['tool']==tool_list[0]]['year_week'], d2[d2['tool']==tool_list[0]][column_name])
+plt.plot(d2[d2['tool']==tool_list[1]]['year_week'], d2[d2['tool']==tool_list[1]][column_name])
+#plt.ylim(0,1)
 plt.xticks(rotation=45)
 #plt.savefig('tool_usage.png',  bbox_inches="tight")
+plt.show()
+
+
+# Plot the cumulative time spent per each tool
+objects = year_week_list
+pos = np.arange(len(year_week_list))
+column_name = 'cumsum'
+
+plt.figure(figsize=(8,6))
+plt.plot(pos, d2[d2['tool']==tool_list[0]][column_name])
+plt.plot(pos, d2[d2['tool']==tool_list[1]][column_name])
+
+plt.xticks(pos, objects)
+plt.xticks(rotation=45)
+
+plt.ylabel('Hours')
+plt.xlabel('Year-Week#')
+plt.title('Total Time Spent Per Tool')
 plt.show()
 
 
