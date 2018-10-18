@@ -17,6 +17,7 @@ from pytz import all_timezones
 
 import re
 import matplotlib.pyplot as plt
+import itertools
 
 
 
@@ -105,8 +106,16 @@ tool_df = pd.DataFrame(tool)
 tool_df.rename(columns = {'task_time_minutes': 'tool_hours',
                           'Tool/Format': 'tool'}, inplace = True)
 
+# Make sure every date appears for every tool (cross join) - for plotting
+tool_list = list(df['Tool/Format'].unique())
+week_year_list = list(df['year_week'].unique())
+d_cross = pd.DataFrame(list(itertools.product(tool_list, week_year_list))) 
+d_cross.columns = ['tool', 'year_week']   
+    
+    
 # Combine the two dataframes
-d2 = pd.merge(hrs_df,tool_df, how = 'left', left_on = 'year_week', right_on = 'year_week')
+d1 = pd.merge(d_cross, hrs_df, how = 'left', left_on = 'year_week', right_on = 'year_week')
+d2 = pd.merge(d1, tool_df, how = 'left', left_on = ['tool','year_week'], right_on = ['tool','year_week'])
 
 # Replace all nan values with 0
 d2['tool_hours'] = d2['tool_hours'].fillna(0)
@@ -116,6 +125,8 @@ d2['percentage'] = d2['tool_hours']/d2['total_hours']
 
 # Order values by date (for chart below)
 d2.sort_values('year_week')
+
+
 
 # Visually display the data
 tool_list = ['Python', 'Redshift']
