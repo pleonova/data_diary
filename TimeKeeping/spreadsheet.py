@@ -93,73 +93,81 @@ df['year_week'] = df.start_date_pt.dt.strftime('%Y-%U')
 
 
 ################ Data Calculations ####################
+# Generalize Column Names
+date_agg_column = 'year_week'
+time_column = 'task_time_minutes'  # Needs to be in minutes
+category_column = 'Tool/Format'
+
 
 # Total hours worked
-hrs = df.groupby('year_week')['task_time_minutes'].sum()/60
+hrs = df.groupby(date_agg_column)[time_column].sum()/60
 hrs_df = pd.DataFrame(hrs).reset_index()
-hrs_df.rename(columns = {'task_time_minutes': 'total_hours'}, inplace = True)
+hrs_df.rename(columns = {time_column: 'total_hours'}, inplace = True)
 
 
-# Total time spent per Tool
-tool = (df.groupby(['year_week','Tool/Format'])['task_time_minutes'].sum()/60).reset_index()
-tool_df = pd.DataFrame(tool)
-tool_df.rename(columns = {'task_time_minutes': 'tool_hours',
-                          'Tool/Format': 'tool'}, inplace = True)
+# Total time spent per selected category
+category = (df.groupby([date_agg_column,category_column])[time_column].sum()/60).reset_index()
+category_df = pd.DataFrame(category)
+category_df.rename(columns = {time_column: 'category_hours',
+                          category_column: 'category'}, inplace = True)
 
-# Make sure every date appears for every tool (cross join) - for plotting
-tool_list = list(df['Tool/Format'].unique())
-year_week_list = list(df['year_week'].unique())
-d_cross = pd.DataFrame(list(itertools.product(tool_list, year_week_list))) 
-d_cross.columns = ['tool', 'year_week']   
+# Make sure every date appears for every category (cross join) - for plotting
+category_list = list(df[category_column].unique())
+year_week_list = list(df[date_agg_column].unique())
+d_cross = pd.DataFrame(list(itertools.product(category_list, year_week_list))) 
+d_cross.columns = ['category', date_agg_column]   
     
     
 # Combine the two dataframes
-d1 = pd.merge(d_cross, hrs_df, how = 'left', left_on = 'year_week', right_on = 'year_week')
-d2 = pd.merge(d1, tool_df, how = 'left', left_on = ['tool','year_week'], right_on = ['tool','year_week'])
+d1 = pd.merge(d_cross, hrs_df, how = 'left', left_on = date_agg_column, right_on = date_agg_column)
+d2 = pd.merge(d1, category_df, how = 'left', left_on = ['category',date_agg_column], right_on = ['category',date_agg_column])
 
 # Replace all nan values with 0
-d2['tool_hours'] = d2['tool_hours'].fillna(0)
+d2['category_hours'] = d2['category_hours'].fillna(0)
 
-# Percentage of time spent using the tool
-d2['percentage'] = d2['tool_hours']/d2['total_hours']
+# Percentage of time spent using the category
+d2['percentage'] = d2['category_hours']/d2['total_hours']
 
 
 # Order values by date (for chart below)
-d2.sort_values('year_week')
+d2.sort_values(date_agg_column)
 
-# Create a cumlative sum column for each tool
-d2['cumsum'] = d2.groupby(['tool'])['tool_hours'].apply(lambda x: x.cumsum())
+# Create a cumlative sum column for each category
+d2['cumsum'] = d2.groupby(['category'])['category_hours'].apply(lambda x: x.cumsum())
 
 
+# ~~~~~~~~~~~~~~~~~~~~~ Weekly PLOT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Visually display the data
-#tool_list = ['Python', 'Redshift']
+#category_list = ['Python', 'Redshift']
 plt.figure(figsize=(8,6))
-column_name = 'tool_hours'
-plt.plot(d2[d2['tool']==tool_list[0]]['year_week'], d2[d2['tool']==tool_list[0]][column_name])
-plt.plot(d2[d2['tool']==tool_list[1]]['year_week'], d2[d2['tool']==tool_list[1]][column_name])
+column_name = 'category_hours'
+plt.plot(d2[d2['category']==category_list[0]][date_agg_column], d2[d2['category']==category_list[0]][column_name])
+plt.plot(d2[d2['category']==category_list[1]][date_agg_column], d2[d2['category']==category_list[1]][column_name])
 #plt.ylim(0,1)
 plt.xticks(rotation=45)
-#plt.savefig('tool_usage.png',  bbox_inches="tight")
+#plt.savefig('category_usage.png',  bbox_inches="tight")
 plt.show()
 
 
-# Plot the cumulative time spent per each tool
+
+# ~~~~~~~~~~~~~~~~~~~~~ CumSum PLOT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Plot the cumulative time spent per each category
 objects = year_week_list
 pos = np.arange(len(year_week_list))
 column_name = 'cumsum'
 
 plt.figure(figsize=(8,6))
 
-for i in range(len(tool_list)):
-    plt.plot(pos, d2[d2['tool']==tool_list[i]][column_name])
+for i in range(len(category_list)):
+    plt.plot(pos, d2[d2['category']==category_list[i]][column_name])
 
 plt.xticks(pos, objects)
 plt.xticks(rotation=45)
-plt.legend(tool_list)
+plt.legend(category_list)
 
 plt.ylabel('Hours')
 plt.xlabel('Year-Week#')
-plt.title('Total Time Spent Per Tool')
+plt.title('Total Time Spent Per Category')
 plt.show()
 
 
@@ -168,26 +176,26 @@ plt.show()
 
 
 # Total hours worked, excluding breaks
-df[df['Area'] != 'Break'].groupby('year_week')['task_time_minutes'].sum()/60
+df[df['Area'] != 'Break'].groupby('year_week')[time_column].sum()/60
 
 
-df.groupby('Tool/Format')['task_time_minutes'].sum()/60  
+df.groupby('Tool/Format')[time_column].sum()/60  
 
 # Total time spent per Skill
-df.groupby('Skill')['task_time_minutes'].sum()/60 
+df.groupby('Skill')[time_column].sum()/60 
 
 
 
 # How much time did I spend before 9am or after 5pm
 
 # Split out by project
-df.groupby(['Tool/Format', 'Task'])['task_time_minutes'].sum()/60 
+df.groupby(['Tool/Format', 'Task'])[time_column].sum()/60 
 
 
 
 # Create dataframe of hours working per week (excluding breaks)
 df_year_week = df[df['Area'] != 'Break'].groupby('year_week').agg(
-                {'task_time_minutes' : [np.sum],
+                {time_column : [np.sum],
                  'start_date_pt': [np.min]
                 }).reset_index()
 df_year_week.columns = [''.join(col).strip() for col in df_year_week.columns.values]
