@@ -1,0 +1,137 @@
+<!doctype HTML>
+
+<html>
+<head>
+  <title>Data Patterns</title>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+
+</head>
+    
+<div id="area1"></div>
+<div id="area2"></div> 
+<div id="area3"></div> 
+
+    
+<body>
+	<!-- Page elements and content go here. -->
+
+  <script>
+      
+    var dataset;
+    
+    var rowConverter = function(d) {  // Create a converter for each column
+        return {
+            date: d.date, //No conversion
+            weather: parseFloat(d.weather_far),
+            city_code: parseFloat(d.city_code),
+            country_code: parseFloat(d.country_code),
+            walking_tour: parseFloat(d.walking_tour)
+
+        };
+    }
+    
+    // Load in data
+    d3.csv("vacation.csv", rowConverter, function (data) {
+        dataset = data
+
+        //***** VARIABLES *****//
+        var w = 800;
+        var h = 100;
+        var area = "#area1"
+        
+        var barPadding = 10;
+        var borderPadding = 5;
+        var num_features = 2;
+        var widthRelative_LengthData = w / dataset.length;
+        var recWidth =  (w-2 * borderPadding - dataset.length * barPadding) / dataset.length;
+        var recHeight = (h-2 * borderPadding - num_features   * barPadding) / num_features;
+        
+        //Color Variables
+        var medianData = d3.median(dataset, function(d) { return d.weather; } );
+        var colors = d3.scaleOrdinal(d3.schemeCategory10);   
+        var countryScale = d3.scaleOrdinal()
+            .domain(['France', 'Spain'])
+            .range(['blue', 'yellow']);
+        var countryScale2 = d3.scaleOrdinal()
+            .domain(['France', 'Spain'])
+            .range(["#b95faf","#6588ce"]);
+        
+        
+        //***** Create SVG elements *****//
+        
+        // Layer each svg element on top of each other
+        var canvas = 
+            d3.select(area)
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h)
+        
+        var canvas2 = 
+            d3.select("#area2")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+        
+        var canvas3 = 
+            d3.select("#area3")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+        
+        
+        // Update elements
+        canvas 
+            .selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")  
+            .attr("x", function(d, i) {
+                return (i*recWidth) + (i*barPadding); 
+            })        
+            .attr("y", barPadding)
+            .attr("height", h)
+            .attr("width", recWidth) 
+            .attr("fill", function(d) { 
+                if (d.weather <= medianData) {return "teal"} else { return "orange" } })
+            ;
+
+        canvas2 
+            .selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")  
+            .attr("x", function(d, i) {
+                return (i*recWidth) + (i*barPadding); 
+            })              
+            .attr("y", barPadding)
+            .attr("height", h)
+            .attr("width", recWidth) 
+            .attr("fill", function(d) {
+                return "rgb(0,0, " + Math.round(d.city_code*100) + ")" })
+        ;
+        
+        canvas3
+            .selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")  
+            .attr("x", function(d, i) {
+                return (i*recWidth) + (i*barPadding); 
+            })              
+            .attr("y", barPadding)
+            .attr("height", h)
+            .attr("width", recWidth) 
+            .attr("fill", function(d, i) {
+             //   return "rgb(0," + Math.round(d.walking_tour*100) + ",0 )" 
+//                return colors(i)
+                return countryScale2(d.country_code);
+
+        })
+        ;
+
+    });
+
+  </script>
+
+</body>
+</html>
